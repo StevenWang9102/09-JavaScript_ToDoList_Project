@@ -1,10 +1,13 @@
+<!-- 项目来源：How to Code A Better To-Do List - Tutorial  -->
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Todo list</title>
+    <title>To do list</title>
     <link
       href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700,900&display=swap"
       rel="stylesheet"
@@ -16,10 +19,13 @@
   <body>
     <h1 class="title">Stuff I need to do</h1>
 
-    <div class="all-tasks">
-      <h2 class="task-list-title">My lists</h2>
-      <ul class="task-list" data-lists></ul>
+    <!-- Tasks in general -->
+    <div class="all-tasks" >
+      <h2 class="task-list-title">My To Do List</h2>
+      <ul class="task-list" data-lists>
+      </ul>
 
+      <!-- 左侧任务单 -->
       <form action="" data-new-list-form>
         <input 
           type="text"
@@ -29,23 +35,61 @@
           aria-label="new list name"
         />
         <button class="btn create" aria-label="create new list">+</button>
+        <!-- 这里好像是交集选择器 -->
       </form>
     </div>
 
-    <div class="todo-list" data-list-display-container>
+    <!-- 右侧执行单 -->
+    <div class="todo-list" display-container>
       <div class="todo-header">
         <h2 class="list-title" data-list-title>YouTube</h2>
         <p class="task-count" data-list-count>3 tasks remaining</p>
       </div>
 
       <div class="todo-body">
-        <div class="tasks" data-tasks></div>
+        <div class="tasks" data-tasks>
+          <div class="task">
+            <input 
+              type="checkbox"
+              id="task-1"
+            />
+            <label for="task-1">
+              <span class="custom-checkbox"></span>
+              record todo list video
+            </label>
+          </div>
+          <!-- /task-1 -->
+
+          <div class="task">
+              <input 
+                type="checkbox"
+                id="task-2"
+              />
+              <label for="task-2">
+                <span class="custom-checkbox"></span>
+                another task
+              </label>
+            </div>
+            <!-- /task-2 -->
+
+            <div class="task">
+                <input 
+                  type="checkbox"
+                  id="task-3"
+                />
+                <label for="task-3">
+                  <span class="custom-checkbox"></span>
+                  a third task
+                </label>
+              </div>
+              <!-- /task-3 -->
+        </div>
 
         <div class="new-task-creator">
             <form action="" data-new-task-form>
                 <input 
                   type="text"
-                  data-new-task-input
+                  tada-new-task-input
                   class="new task"
                   placeholder="new task name"
                   aria-label="new task name"
@@ -55,14 +99,14 @@
         </div>
 
         <div class="delete-stuff">
-          <button class="btn delete" data-clear-complete-tasks-button>Clear completed tasks</button>
+          <button class="btn delete">Clear completed tasks</button>
           <button class="btn delete" data-delete-list-button>Delete list</button>
         </div>
       </div>
     </div>
-
-   
     </div>
+
+
     <template id="task-template">
       <div class="task">
         <input type="checkbox" />
@@ -71,5 +115,7 @@
         </label>
       </div>
     </template>
+
+
   </body>
 </html>

@@ -16,6 +16,15 @@ const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
 let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
 
+
+function createList(name) {
+  return { id: Date.now().toString(), name: name, tasks: [] }
+}
+
+function createTask(name) {
+  return { id: Date.now().toString(), name: name, complete: false }
+}
+
 //左侧清单
 listsContainer.addEventListener('click', e => {
   if (e.target.tagName.toLowerCase() === 'li') {
@@ -68,35 +77,46 @@ newTaskForm.addEventListener('submit', e => {
   const taskName = newTaskInput.value
   if (taskName == null || taskName === '') return
   //啥都不return。。。。
-  、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、
-  const task = createTask(taskName)
+
+  const myTask = createTask(taskName)
   newTaskInput.value = null
   const selectedList = myLists.find(list => list.id === selectedListId)
-  selectedList.tasks.push(task)
+  selectedList.tasks.push(myTask)//为什么有tasks??
+  console.log(selectedList);
   saveAndRender()
 })
-
-function createList(name) {
-  return { id: Date.now().toString(), name: name, tasks: [] }
-}
-
-function createTask(name) {
-  return { id: Date.now().toString(), name: name, complete: false }
-}
-
-function saveAndRender() {
-  save()
-  render()
-}
 
 function save() {
   localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(myLists))
   localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
 }
 
+//清理所有内容
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild)
+  }
+}
+
+
+//---------------------进行到这里-----------------////
+//渲染右侧的内容
+function renderMyLists() {
+  myLists.forEach(list => {
+    const listElement = document.createElement('li')
+    listElement.dataset.listId = list.id
+    listElement.classList.add("list-name")
+    listElement.innerText = list.name
+    if (list.id === selectedListId) {
+      listElement.classList.add('active-list')
+    }
+    listsContainer.appendChild(listElement)
+  })
+}
+
 function render() {
-  clearElement(listsContainer)
-  renderLists()
+  clearElement(listsContainer)//清空左侧清单中的所有内容
+  renderMyLists()
 
   const selectedList = myLists.find(list => list.id === selectedListId)
   if (selectedListId == null) {
@@ -109,6 +129,13 @@ function render() {
     renderTasks(selectedList)
   }
 }
+
+function saveAndRender() {
+  save()
+  render()
+}
+
+
 
 function renderTasks(selectedList) {
   selectedList.tasks.forEach(task => {
@@ -129,23 +156,8 @@ function renderTaskCount(selectedList) {
   listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
 }
 
-function renderLists() {
-  myLists.forEach(list => {
-    const listElement = document.createElement('li')
-    listElement.dataset.listId = list.id
-    listElement.classList.add("list-name")
-    listElement.innerText = list.name
-    if (list.id === selectedListId) {
-      listElement.classList.add('active-list')
-    }
-    listsContainer.appendChild(listElement)
-  })
-}
 
-function clearElement(element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild)
-  }
-}
+
+
 
 render()

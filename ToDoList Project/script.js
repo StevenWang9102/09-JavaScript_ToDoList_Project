@@ -99,21 +99,21 @@ function clearElement(element) {
 }
 
 
-//---------------------进行到这里-----------------////
 //渲染右侧的内容
 function renderMyLists() {
   myLists.forEach(list => {
-    const listElement = document.createElement('li')
-    listElement.dataset.listId = list.id
-    listElement.classList.add("list-name")
-    listElement.innerText = list.name
+    const createNewList = document.createElement('li')
+    createNewList.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId
+    createNewList.classList.add("list-name")
+    createNewList.innerText = list.name
     if (list.id === selectedListId) {
-      listElement.classList.add('active-list')
+      createNewList.classList.add('active-list')
     }
-    listsContainer.appendChild(listElement)
+    listsContainer.appendChild(createNewList)
   })
 }
 
+//---------------------进行到这里-----------------//
 function render() {
   clearElement(listsContainer)//清空左侧清单中的所有内容
   renderMyLists()
@@ -135,8 +135,6 @@ function saveAndRender() {
   render()
 }
 
-
-
 function renderTasks(selectedList) {
   selectedList.tasks.forEach(task => {
     const taskElement = document.importNode(taskTemplate.content, true)
@@ -155,9 +153,5 @@ function renderTaskCount(selectedList) {
   const taskString = incompleteTaskCount === 1 ? "task" : "tasks"
   listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
 }
-
-
-
-
 
 render()

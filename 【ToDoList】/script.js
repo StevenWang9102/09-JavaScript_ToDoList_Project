@@ -27,6 +27,8 @@ function createTask(name) {
 
 //左侧清单
 listsContainer.addEventListener('click', e => {
+  console.log(event);
+
   if (e.target.tagName.toLowerCase() === 'li') {
     selectedListId = e.target.dataset.listId
     saveAndRender()
@@ -62,12 +64,16 @@ deleteListButton.addEventListener('click', e => {
 //添加新的list
 newListForm.addEventListener('submit', e => {
   e.preventDefault()
+  console.log(e);
+  
   const listName = newListInput.value
-  if (listName == null || listName === '') return
-  //return啥都没有？？@@@@@@@@@@@
-  const list = createList(listName)
-  newListInput.value = null
-  myLists.push(list) //储存起来
+  if (listName !== null && listName !== '') 
+  {
+    const list = createList(listName)
+    newListInput.value = null
+    myLists.push(list) //储存起来
+  } // return之后，遇到一个没输入之后就不再继续检测；
+  
   saveAndRender()
 })
 
@@ -102,14 +108,14 @@ function clearElement(element) {
 //渲染右侧的内容
 function renderMyLists() {
   myLists.forEach(list => {
-    const createNewList = document.createElement('li')
-    createNewList.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId
-    createNewList.classList.add("list-name")
-    createNewList.innerText = list.name
+    const li = document.createElement('li')
+    li.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId
+    li.classList.add("list-name")//新增的li也是有class的
+    li.innerText = list.name
     if (list.id === selectedListId) {
-      createNewList.classList.add('active-list')
+      li.classList.add('active-list')
     }
-    listsContainer.appendChild(createNewList)
+    listsContainer.appendChild(li)
   })
 }
 

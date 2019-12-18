@@ -82,7 +82,6 @@ form {
   padding: 3px 9px 3px 9px;
   background-color: #0e5ae7c2;
   color: white;
-  /* border: white; */
   border: 1px solid white
 }
 
@@ -151,7 +150,6 @@ form {
   grid-area: active;
   background: var(--clr-light);
   color: var(--clr-dark);
-  border-radius: 5%;
 }
 
 .todo-header {

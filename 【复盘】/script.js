@@ -1,3 +1,11 @@
+const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //此处啥意思
+const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
+
+let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
+let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
+
+
+
 // 左侧栏目增加监听，加入左边的list
 const listsContainer = document.querySelector('[data-lists]')
 listsContainer.addEventListener('click',(event)=>{
@@ -16,6 +24,13 @@ function createList(name) {
 
 const myLists = [];
 
+function save() {
+    localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(myLists))
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
+  }
+
+
+
 newListForm.addEventListener('submit',(event)=>{
     //为什么是submit，就知道我回车的时候就知道我要@@@@@@@@@@@@@@@@
     e.preventDefault()
@@ -26,22 +41,42 @@ newListForm.addEventListener('submit',(event)=>{
         myLists.push(newList)//储存起来
         newListInput.value = null
     }
-
-    renderMyLists();
+    save()//为什么这么储存
+    render();//为什么不是直接renderMylist?
 })
 
 //渲染左侧数据
-const renderMyLists=()=>{
-//myLists中的内容＞循环变成li标签＞塞入ul中
-    myLists.forEach(element => {
-        var li=document.createElement('li');
-        li.value = element;
-        li.dataset.listId = list.id //每一个新增的li，都注入ID
-        li.classList.add("list-name")//新增的li也是有class的
-        。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
-        listsContainer.appendChild(li);
-    });
-}
+function renderMyLists() {
+    myLists.forEach(list => {
+      const li = document.createElement('li')
+      li.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId
+      li.classList.add("list-name")//新增的li也是有class的
+      li.innerText = list.name
+      if (list.id === selectedListId) {
+        li.classList.add('active-list')
+      }
+      listsContainer.appendChild(li)
+    })
+  }
+
+  function render() {
+    clearElement(listsContainer)//清空左侧清单中的所有内容
+    renderMyLists()
+  
+    const selectedList = myLists.find(list => list.id === selectedListId)
+    if (selectedListId == null) {
+      listDisplayContainer.style.display = 'none'
+    } else {
+      listDisplayContainer.style.display = ''
+      listTitleElement.innerText = selectedList.name
+      renderTaskCount(selectedList)
+      clearElement(tasksContainer)
+      renderTasks(selectedList)
+    }
+  }
+  
+
+
 
 //
 //

@@ -205,6 +205,10 @@ form {
   opacity: 0.1;
 }
 
+.template-input{
+  height: 2px;
+}
+
 .custom-checkbox {
   --size: 0.75em;
   display: inline-block;

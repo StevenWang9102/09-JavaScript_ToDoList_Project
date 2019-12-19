@@ -81,9 +81,7 @@ newListForm.addEventListener('submit', e => {
 newTaskForm.addEventListener('submit', e => {
   e.preventDefault()
   const taskName = newTaskInput.value
-  if (taskName == null || taskName === '') return
-  //啥都不return。。。。
-
+  if (taskName == null || taskName === '') return //啥都不return。。。。
   const myTask = createTask(taskName)
   newTaskInput.value = null
   const selectedList = myLists.find(list => list.id === selectedListId)
@@ -119,19 +117,21 @@ function renderMyLists() {
   })
 }
 
-//---------------------进行到这里-----------------//
 function render() {
-  clearElement(listsContainer)//清空左侧清单中的所有内容
-  renderMyLists()
+  //这个是渲染所有的的内容
 
-  const selectedList = myLists.find(list => list.id === selectedListId)
+  clearElement(listsContainer)//清空左侧清单中的所有内容
+  renderMyLists()//渲染左边的
+
+  const selectedList = myLists.find(list => list.id === selectedListId)//定义选择的list
+
   if (selectedListId == null) {
     listDisplayContainer.style.display = 'none'
   } else {
     listDisplayContainer.style.display = ''
-    listTitleElement.innerText = selectedList.name
+    listTitleElement.innerText = selectedList.name //这是右边的显示细节区域
     renderTaskCount(selectedList)
-    clearElement(tasksContainer)
+    clearElement(tasksContainer)//清理？？？为什么要清理
     renderTasks(selectedList)
   }
 }
@@ -141,14 +141,16 @@ function saveAndRender() {
   render()
 }
 
+//----------------------------进行到这里---------------------//
 function renderTasks(selectedList) {
-  selectedList.tasks.forEach(task => {
-    const taskElement = document.importNode(taskTemplate.content, true)
+  //这个方法渲染左边选中的list
+  selectedList.tasks.forEach(task => { //啥意思 .tasks
+    const taskElement = document.importNode(taskTemplate.content, true) //制造了一个模板
     const checkbox = taskElement.querySelector('input')
     checkbox.id = task.id
-    checkbox.checked = task.complete
-    const label = taskElement.querySelector('label')
-    label.htmlFor = task.id
+    checkbox.checked = task.complete //选中状态由于完成度决定
+    const label = taskElement.querySelector('label') //选中模板中的label
+    label.htmlFor = task.id //衔接
     label.append(task.name)
     tasksContainer.appendChild(taskElement)
   })

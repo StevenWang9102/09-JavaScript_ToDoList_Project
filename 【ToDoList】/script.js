@@ -11,14 +11,12 @@ const newTaskForm = document.querySelector('[data-new-task-form]')
 const newTaskInput = document.querySelector('[data-new-task-input]')
 const clearCompleteTasksButton = document.querySelector('[data-clear-complete-tasks-button]')
 
-//----------------------------进行到这里：搞清楚不明白的地方---------------------//
-//----------------------------进行到这里：再去复盘，要不困难重重---------------------//
-//----------------------------进行到这里---------------------//
+//
+const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //浏览器本地储存的Key
+let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [] //从浏览器取值 getItem
+//Mylist的数据类型到底是什么@@@@@@@@@
 
-
-const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //此处啥意思@@@@@@
-const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
-let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
+const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'//选中list的ID
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
 
 
@@ -30,18 +28,83 @@ function createTask(name) {
   return { id: Date.now().toString(), name: name, complete: false }
 }
 
-//左侧清单
-listsContainer.addEventListener('click', e => {
-  console.log(event);
 
+//清理所有内容
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild)
+  }
+}
+
+
+//左侧任务清单
+listsContainer.addEventListener('click', e => {
+  console.log(e.target.dataset);
   if (e.target.tagName.toLowerCase() === 'li') {
-    selectedListId = e.target.dataset.listId
+    selectedListId = e.target.dataset.listId 
+    //获取选中list的id，并且已经存入浏览器
+    // DOMStringMap？？？@@@@@@@存在一个ID在__proto__上面
     saveAndRender()
   }
 })
 
+//左侧添加新的list
+newListForm.addEventListener('submit', e => {
+  e.preventDefault()
+  
+  const listName = newListInput.value
+  if (listName !== null && listName !== '') 
+  {
+    const list = createList(listName) //创建右侧的list
+    newListInput.value = null
+    myLists.push(list) //储存起来
+  } 
+  // console.log(JSON.stringify（myLists);
+  saveAndRender()
+})
+
+function saveAndRender() {
+  save()
+  render()
+}
+
+//保存功能
+function save() {
+  localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(myLists)) //为什么要变形@@@@@
+  localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
+}
+
+
+//----------------------------进行到这里：搞清楚不明白的地方---------------------//
+。。。。。。。。。。。。。。。。。。。
+//----------------------------进行到这里：再去复盘，要不困难重重---------------------//
+
+
+function render() {
+  //这个是渲染所有的的内容
+
+  clearElement(listsContainer)//清空左侧清单中的所有内容
+  renderMyLists()//渲染左边的
+
+  const selectedList = myLists.find(list => list.id === selectedListId)//定义选择的list
+
+  if (selectedListId == null) {
+    listDisplayContainer.style.display = 'none'
+  } else {
+    listDisplayContainer.style.display = ''
+    listTitleElement.innerText = selectedList.name //这是右边的显示细节区域
+    renderTaskCount(selectedList)
+    clearElement(tasksContainer)//清理？？？为什么要清理
+    renderTasks(selectedList)
+  }
+}
+
+
+
 //右侧清单
 tasksContainer.addEventListener('click', e => {
+  console.log(e);
+  
   if (e.target.tagName.toLowerCase() === 'input') {
     const selectedList = myLists.find(list => list.id === selectedListId) //为啥用ID
     const selectedTask = selectedList.tasks.find(task => task.id === e.target.id) // 存在tasks属性？
@@ -66,21 +129,7 @@ deleteListButton.addEventListener('click', e => {
   saveAndRender()
 })
 
-//添加新的list
-newListForm.addEventListener('submit', e => {
-  e.preventDefault()
-  console.log(e);
-  
-  const listName = newListInput.value
-  if (listName !== null && listName !== '') 
-  {
-    const list = createList(listName)
-    newListInput.value = null
-    myLists.push(list) //储存起来
-  } // return之后，遇到一个没输入之后就不再继续检测；
-  
-  saveAndRender()
-})
+
 
 //添加新的任务
 newTaskForm.addEventListener('submit', e => {
@@ -95,17 +144,6 @@ newTaskForm.addEventListener('submit', e => {
   saveAndRender()
 })
 
-function save() {
-  localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(myLists))
-  localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
-}
-
-//清理所有内容
-function clearElement(element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild)
-  }
-}
 
 
 //渲染右侧的内容
@@ -122,29 +160,8 @@ function renderMyLists() {
   })
 }
 
-function render() {
-  //这个是渲染所有的的内容
 
-  clearElement(listsContainer)//清空左侧清单中的所有内容
-  renderMyLists()//渲染左边的
 
-  const selectedList = myLists.find(list => list.id === selectedListId)//定义选择的list
-
-  if (selectedListId == null) {
-    listDisplayContainer.style.display = 'none'
-  } else {
-    listDisplayContainer.style.display = ''
-    listTitleElement.innerText = selectedList.name //这是右边的显示细节区域
-    renderTaskCount(selectedList)
-    clearElement(tasksContainer)//清理？？？为什么要清理
-    renderTasks(selectedList)
-  }
-}
-
-function saveAndRender() {
-  save()
-  render()
-}
 
 function renderTasks(selectedList) {
   //这个方法渲染左边选中的list

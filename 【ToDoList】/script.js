@@ -11,7 +11,12 @@ const newTaskForm = document.querySelector('[data-new-task-form]')
 const newTaskInput = document.querySelector('[data-new-task-input]')
 const clearCompleteTasksButton = document.querySelector('[data-clear-complete-tasks-button]')
 
-const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //此处啥意思
+//----------------------------进行到这里：搞清楚不明白的地方---------------------//
+//----------------------------进行到这里：再去复盘，要不困难重重---------------------//
+//----------------------------进行到这里---------------------//
+
+
+const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //此处啥意思@@@@@@
 const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
 let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
@@ -141,7 +146,6 @@ function saveAndRender() {
   render()
 }
 
-//----------------------------进行到这里---------------------//
 function renderTasks(selectedList) {
   //这个方法渲染左边选中的list
   selectedList.tasks.forEach(task => { //啥意思 .tasks

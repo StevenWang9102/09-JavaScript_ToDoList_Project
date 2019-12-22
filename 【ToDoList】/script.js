@@ -25,15 +25,7 @@ function createList(name) {
 }
 
 function createTask(name) {
-  return { id: Date.now().toString(), name: name, complete: false }
-}
-
-
-//清理所有内容
-function clearElement(element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild)
-  }
+  return { id: Date.now().toString(), name: name, completeStatus: false }
 }
 
 
@@ -74,42 +66,77 @@ function save() {
   localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
 }
 
+//清理所有内容
+function clearElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild)
+  }
+}
 
-//----------------------------进行到这里：搞清楚不明白的地方---------------------//
-。。。。。。。。。。。。。。。。。。。
-//----------------------------进行到这里：再去复盘，要不困难重重---------------------//
+//渲染左侧的内容
+function renderMyLists() {
+  myLists.forEach(list => {
+    const li = document.createElement('li')
+    li.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId@@@@@@@@@@@@@@
+    li.classList.add("list-name")//新增的li也是有class的
+    li.innerText = list.name
 
+    //这是渲染选中的效果
+    if (list.id === selectedListId) {
+      li.classList.add('active-list')
+    }
+    listsContainer.appendChild(li)
+  })
+}
+
+function renderTasks(selectedMyList) {
+  //这个方法渲染左边选中的list
+  selectedMyList.tasks.forEach(task => {
+    //渲染1 模板
+    //渲染2 模板中含有的CheckBox
+    //渲染3 模板中含有的lable
+    const addOneTask = document.importNode(taskTemplate.content, true) //制造了一个模板
+    const checkbox = addOneTask.querySelector('input')
+    checkbox.id = task.id
+    checkbox.checked = task.completeStatus //选中状态由于完成度决定
+
+
+    const label = addOneTask.querySelector('label') //选中模板中的label
+    label.htmlFor = task.id //衔接
+    label.append(task.name)
+    tasksContainer.appendChild(addOneTask)
+  })
+}
 
 function render() {
   //这个是渲染所有的的内容
 
-  clearElement(listsContainer)//清空左侧清单中的所有内容
-  renderMyLists()//渲染左边的
+  clearElement(listsContainer)//清理：清理数据，否则累加渲染
+  renderMyLists()//渲染左边的lists
 
   const selectedList = myLists.find(list => list.id === selectedListId)//定义选择的list
 
   if (selectedListId == null) {
-    listDisplayContainer.style.display = 'none'
+    listDisplayContainer.style.display = 'none'//如果没有选中的list，那么什么都不显示
   } else {
-    listDisplayContainer.style.display = ''
+    listDisplayContainer.style.display = 'block' 
     listTitleElement.innerText = selectedList.name //这是右边的显示细节区域
     renderTaskCount(selectedList)
-    clearElement(tasksContainer)//清理？？？为什么要清理
+    clearElement(tasksContainer)//清理：清理数据，否则累加渲染
     renderTasks(selectedList)
   }
 }
 
 
-
 //右侧清单
-tasksContainer.addEventListener('click', e => {
-  console.log(e);
+tasksContainer.addEventListener('click', event => {
   
-  if (e.target.tagName.toLowerCase() === 'input') {
-    const selectedList = myLists.find(list => list.id === selectedListId) //为啥用ID
-    const selectedTask = selectedList.tasks.find(task => task.id === e.target.id) // 存在tasks属性？
-    selectedTask.complete = e.target.checked
-    save()
+  if (event.target.tagName.toLowerCase() === 'input') {
+    const selectedList = myLists.find(list => list.id === selectedListId)
+
+    const selectedTask = selectedList.tasks.find(task => task.id === event.target.id)//ID哪里来的@@@@@@
+    selectedTask.completeStatus = event.target.checked
+    save() //为什么保存，还不render@@@@@@@@@
     renderTaskCount(selectedList) //计算任务数目的
   }
 })
@@ -117,7 +144,7 @@ tasksContainer.addEventListener('click', e => {
 //清理完成的任务
 clearCompleteTasksButton.addEventListener('click', e => {
   const selectedList = myLists.find(list => list.id === selectedListId)
-  selectedList.tasks = selectedList.tasks.filter(task => !task.complete)
+  selectedList.tasks = selectedList.tasks.filter(task => !task.completeStatus)
   saveAndRender()
 })
 
@@ -130,6 +157,14 @@ deleteListButton.addEventListener('click', e => {
 })
 
 
+function renderTaskCount(selectedList) {
+  const incompleteTaskCount = selectedList.tasks.filter(task => !task.completeStatus).length
+  const taskString = incompleteTaskCount === 1 ? "task" : "tasks"
+  listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
+}
+
+
+
 
 //添加新的任务
 newTaskForm.addEventListener('submit', e => {
@@ -139,48 +174,8 @@ newTaskForm.addEventListener('submit', e => {
   const myTask = createTask(taskName)
   newTaskInput.value = null
   const selectedList = myLists.find(list => list.id === selectedListId)
-  selectedList.tasks.push(myTask)//为什么有tasks??
-  console.log(selectedList);
+  selectedList.tasks.push(myTask)
   saveAndRender()
 })
-
-
-
-//渲染右侧的内容
-function renderMyLists() {
-  myLists.forEach(list => {
-    const li = document.createElement('li')
-    li.dataset.listId = list.id //这是啥？大致就是循环赋值一个listId
-    li.classList.add("list-name")//新增的li也是有class的
-    li.innerText = list.name
-    if (list.id === selectedListId) {
-      li.classList.add('active-list')
-    }
-    listsContainer.appendChild(li)
-  })
-}
-
-
-
-
-function renderTasks(selectedList) {
-  //这个方法渲染左边选中的list
-  selectedList.tasks.forEach(task => { //啥意思 .tasks
-    const taskElement = document.importNode(taskTemplate.content, true) //制造了一个模板
-    const checkbox = taskElement.querySelector('input')
-    checkbox.id = task.id
-    checkbox.checked = task.complete //选中状态由于完成度决定
-    const label = taskElement.querySelector('label') //选中模板中的label
-    label.htmlFor = task.id //衔接
-    label.append(task.name)
-    tasksContainer.appendChild(taskElement)
-  })
-}
-
-function renderTaskCount(selectedList) {
-  const incompleteTaskCount = selectedList.tasks.filter(task => !task.complete).length
-  const taskString = incompleteTaskCount === 1 ? "task" : "tasks"
-  listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
-}
 
 render()

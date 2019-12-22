@@ -14,7 +14,6 @@ const clearCompleteTasksButton = document.querySelector('[data-clear-complete-ta
 //
 const LOCAL_STORAGE_LIST_KEY = 'task.myLists' //浏览器本地储存的Key
 let myLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [] //从浏览器取值 getItem
-//Mylist的数据类型到底是什么@@@@@@@@@
 
 const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'//选中list的ID
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
@@ -29,7 +28,7 @@ function createTask(name) {
 }
 
 
-//左侧任务清单
+//左侧任务点击事件，渲染右侧列表
 listsContainer.addEventListener('click', e => {
   console.log(e.target.dataset);
   if (e.target.tagName.toLowerCase() === 'li') {
@@ -56,21 +55,25 @@ newListForm.addEventListener('submit', e => {
 })
 
 function saveAndRender() {
-  save()
-  render()
+  saveToBrower()
+  renderAll()
 }
 
 //保存功能
-function save() {
+function saveToBrower() {
   localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(myLists)) //为什么要变形@@@@@
   localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
 }
 
 //清理所有内容
 function clearElement(element) {
-  while (element.firstChild) {
+  while (element.hasChildNodes()) {
     element.removeChild(element.firstChild)
   }
+  // while() //当elem下还存在子节点时 循环继续
+  // {
+  //   element.removeChild(element.firstChild);
+  // }
 }
 
 //渲染左侧的内容
@@ -108,7 +111,7 @@ function renderTasks(selectedMyList) {
   })
 }
 
-function render() {
+function renderAll() {
   //这个是渲染所有的的内容
 
   clearElement(listsContainer)//清理：清理数据，否则累加渲染
@@ -136,7 +139,7 @@ tasksContainer.addEventListener('click', event => {
 
     const selectedTask = selectedList.tasks.find(task => task.id === event.target.id)//ID哪里来的@@@@@@
     selectedTask.completeStatus = event.target.checked
-    save() //为什么保存，还不render@@@@@@@@@
+    saveToBrower() //为什么保存，还不render@@@@@@@@@
     renderTaskCount(selectedList) //计算任务数目的
   }
 })
@@ -178,4 +181,4 @@ newTaskForm.addEventListener('submit', e => {
   saveAndRender()
 })
 
-render()
+renderAll()

@@ -14,7 +14,7 @@
 
 body {
   margin: 0;
-  font-family: "Work Sans", sans-serif;
+  font-family:"Times New Roman",Georgia,Serif;
   font-weight: 300;
   font-size: 1.5rem;
   background-color: var(--clr-primary);
@@ -35,8 +35,9 @@ body {
 
 .all-tasks {
   grid-area: lists;
-  border: 1px solid white;
+  border: 5px solid white;
   padding:20px;
+  border-radius: 3%;
 }
 
 .task-list {
@@ -143,6 +144,7 @@ form {
 
 .active-list {
   font-weight: 700;
+  color: rgb(7, 228, 154);
 }
 
 .todo-list {
@@ -203,6 +205,10 @@ form {
   height: 1px;
   background: currentColor;
   opacity: 0.1;
+}
+
+.template-input{
+  height: 2px;
 }
 
 .custom-checkbox {

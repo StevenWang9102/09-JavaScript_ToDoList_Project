@@ -98,16 +98,21 @@ function renderTasks(selectedMyList) {
     //渲染1 模板
     //渲染2 模板中含有的CheckBox
     //渲染3 模板中含有的lable
-    const addOneTask = document.importNode(taskTemplate.content, true) //制造了一个模板
-    const checkbox = addOneTask.querySelector('input')
+    const addTaskDetails = document.importNode(taskTemplate.content, true) //制造了一个模板
+    //注意这个addOneTask是一个DOM对象，不是普通的对象
+    console.log(taskTemplate);
+    
+
+    const checkbox = addTaskDetails.querySelector('input')
+    console.log(checkbox);//这是一个什么对象@@@
     checkbox.id = task.id
     checkbox.checked = task.completeStatus //选中状态由于完成度决定
 
 
-    const label = addOneTask.querySelector('label') //选中模板中的label
+    const label = addTaskDetails.querySelector('label') //选中模板中的label
     label.htmlFor = task.id //衔接
     label.append(task.name)
-    tasksContainer.appendChild(addOneTask)
+    tasksContainer.appendChild(addTaskDetails)
   })
 }
 
@@ -131,8 +136,9 @@ function renderAll() {
 }
 
 
-//右侧清单
+//右侧清单：添加划除-删除事件
 tasksContainer.addEventListener('click', event => {
+  console.log(event);
   
   if (event.target.tagName.toLowerCase() === 'input') {
     const selectedList = myLists.find(list => list.id === selectedListId)
@@ -155,7 +161,7 @@ clearCompleteTasksButton.addEventListener('click', e => {
 deleteListButton.addEventListener('click', e => {
   myLists = myLists.filter(list => list.id !== selectedListId)
   selectedListId = null
-  //项目围绕这个selectedListId为核心变化@@@@
+  //项目围绕这个selectedListId为核心变化，传递数据 @@@@
   saveAndRender()
 })
 
@@ -167,17 +173,17 @@ function renderTaskCount(selectedList) {
 }
 
 
-
-
-//添加新的任务
+//右侧列表：添加新的任务，只是添加一行任务
 newTaskForm.addEventListener('submit', e => {
+  console.log(e);
+
   e.preventDefault()
   const taskName = newTaskInput.value
-  if (taskName == null || taskName === '') return //啥都不return。。。。
-  const myTask = createTask(taskName)
-  newTaskInput.value = null
-  const selectedList = myLists.find(list => list.id === selectedListId)
-  selectedList.tasks.push(myTask)
+  if (taskName !== null && !taskName === '')
+    {const myTask = createTask(taskName)
+    newTaskInput.value = null
+    const selectedList = myLists.find(list => list.id === selectedListId)
+    selectedList.tasks.push(myTask)}
   saveAndRender()
 })
 

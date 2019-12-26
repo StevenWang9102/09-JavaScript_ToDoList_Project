@@ -66,7 +66,7 @@ function saveToBrower() {
 }
 
 //----------------- 清除列表数组 ----------------
-clearALl = container => {
+clearAll = container => {
   while (container.hasChildNodes()) {
     //当elem下还存在子节点时 循环继续
     container.removeChild(container.firstChild);
@@ -83,29 +83,6 @@ listsContainer.addEventListener("click", e => {
   renderAll();
 });
 
-// function renderTasks(selectedMyList) {
-//   //渲染任务名称：答案里面没有这句@@@@@@@@@
-//   listTitleElement.innerHTML = selectedList.name;
-
-//   selectedMyList.tasks.forEach(task => {
-//     //在内存整出来模板节点
-//     const addOneTask = document.importNode(taskTemplate.content, true); //制造了一个模板
-
-//     //模板中的CheckBox
-//     const checkbox = addOneTask.querySelector("input");
-//     console.log(checkbox);//这是一个什么对象
-//     checkbox.id = task.id;
-//     checkbox.checked = task.completeStatus; //选中状态由于完成度决定  //现在需要：右侧列表总的细节
-
-//     //模板中的
-//     const label = addOneTask.querySelector("label");
-//     label.htmlFor = task.id;
-//     label.append(task.name)
-//     //label中添加一个task
-//     //还要干啥
-//     tasksContainer.appendChild(addOneTask)
-//   });
-// }
 
 //----------------- 右侧列表渲染 ----------------
 function renderTasks(selectedMyList) {
@@ -116,7 +93,7 @@ function renderTasks(selectedMyList) {
     //渲染3 模板中含有的lable
     const addTaskDetails = document.importNode(taskTemplate.content, true); //制造了一个模板
     //注意这个addOneTask是一个DOM对象，不是普通的对象
-    console.log(taskTemplate);
+    // console.log(taskTemplate);
 
     const checkbox = addTaskDetails.querySelector("input");
     checkbox.id = task.id;
@@ -138,49 +115,89 @@ deleteListButton.addEventListener("click", function(e) {
   renderAll();
 });
 
-// //----------------- 右侧：添加新的内容 ----------------
-// newTaskForm.addEventListener('submit', e => {
-//     e.preventDefault()
-//     //首先确认找到li标签
-//       const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list 【正确】
-//       //赋值一次:input中的内容，赋值给TM谁？应该渲染的数组中 添加一个
-//       const newTask = createTask(e.target.value) //这是一个对象{} //【正确】
-//       selectedList.tasks.push(newTask) //数组中存放很多对象？【正确】
-//       //全局渲染
-//       newTaskInput.value = null
-//       saveToBrower()
-//       renderAll();
-// })
 
-//右侧列表：添加新的任务，只是添加一行任务
+//----------------- 右侧列表：添加新的任务，只是添加一行任务-----------------
 newTaskForm.addEventListener('submit', e => {
   e.preventDefault()
+  clearAll(tasksContainer)
+
+  // console.log(e);
+
+  const selectedList = myLists.find(list => list.id === selectedListId)
   const taskName = newTaskInput.value
-  if (taskName !== null && !taskName === ''){
+  
+  if (taskName !== null && taskName !== ''){
+    // console.log('没进来？');
     const myTask = createTask(taskName) 
     newTaskInput.value = null
-    const selectedList = myLists.find(list => list.id === selectedListId)
-    selectedList.tasks.push(myTask)}
-  saveAndRender()
+    selectedList.tasks.push(myTask)  
+}
+  console.log(selectedList.tasks);
+  saveToBrower();
+  renderAll();
 })
 
 
+
 ////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
 ////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
-////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
+//----------------- 右侧：监听是否选中-----------------//
+tasksContainer.addEventListener("click", e => {
+  if (e.target.tagName.toLowerCase() === "input") {
+    const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
+    ...................ID 哪里来的？？？？？？？？？？？
+
+  }
+
+});
+
+//右侧清单：添加划除-删除事件
+tasksContainer.addEventListener('click', event => {
+  console.log(event.target.name);
+  
+  if (event.target.tagName.toLowerCase() === 'input') {
+    const selectedList = myLists.find(list => list.id === selectedListId)
+    const selectedTask = selectedList.tasks.find(task => task.id === event.target.id)//ID哪里来的@@@@@@
+    selectedTask.completeStatus = event.target.checked
+    saveToBrower() //为什么保存，还不render@@@@@@@@@
+    renderTaskCount(selectedList) //计算任务数目的
+  }
+})
 
 
+
+//----------------- 删除选中 ----------------
+clearCompleteTasksButton.addEventListener('click', function(){
+  
+  const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
+  //除掉状态是false的
+  const newTaskDetail = []
+  selectedList.tasks.forEach(task =>{
+    console.log(task);
+    if(task.completeStatus === false){
+      newTaskDetail.push(task)
+    }
+  }  )
+  //list重新赋值
+  //渲染
+  renderTasks(newTaskDetail)
+
+})
 
 //----------------- 全局渲染 ----------------
 function renderAll() {
-  //清除目前的所有内容，以便于重新渲染myList
-  clearALl(listsContainer);
+  //清除目前的所有内容，以便于重新渲染myList，其实主要是清空浏览器
+  clearAll(listsContainer);
+
   //重新渲染左边列表
   const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
 
   renderMyLists();
   renderTasks(selectedList);
-  // console.log(selectedList.name);
+  //应该包含渲染右侧名头
+  listTitleElement.innerHTML = selectedList.name
+  // 为什么不是放在renderTasks函数中呢？？？@@@@@@@@@@@@@@
+  
 }
 
 renderAll();

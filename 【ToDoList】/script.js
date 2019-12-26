@@ -150,6 +150,7 @@ tasksContainer.addEventListener('click', event => {
   }
 })
 
+
 //清理完成的任务
 clearCompleteTasksButton.addEventListener('click', e => {
   const selectedList = myLists.find(list => list.id === selectedListId)
@@ -179,8 +180,9 @@ newTaskForm.addEventListener('submit', e => {
 
   e.preventDefault()
   const taskName = newTaskInput.value
-  if (taskName !== null && !taskName === '')
-    {const myTask = createTask(taskName)
+  if (taskName !== null && taskName !== ''){
+    console.log('没进来？');
+    const myTask = createTask(taskName)
     newTaskInput.value = null
     const selectedList = myLists.find(list => list.id === selectedListId)
     selectedList.tasks.push(myTask)}

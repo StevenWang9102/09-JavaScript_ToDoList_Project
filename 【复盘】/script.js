@@ -158,26 +158,36 @@ clearCompleteTasksButton.addEventListener('click', e => {
   renderAll()
 })
 
-////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
-////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
-
-
 //----------------- 全局渲染 ----------------
 function renderAll() {
-  //清除目前的所有内容，以便于重新渲染myList，其实主要是清空浏览器
-  clearAll(listsContainer);
-  clearAll(tasksContainer);
+  //这个是渲染所有的的内容
 
-  //重新渲染左边列表
-  const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
+  clearAll(listsContainer)//清理：清理数据，否则累加渲染
+  renderMyLists()//渲染左边的lists
 
-  renderMyLists();
-  renderTasks(selectedList);
-  //应该包含渲染右侧名头
-  listTitleElement.innerHTML = selectedList.name
-  // 为什么不是放在renderTasks函数中呢？？？@@@@@@@@@@@@@@
-  
+  const selectedList = myLists.find(list => list.id === selectedListId)//定义选择的list
+
+  if (selectedListId == null) {
+ 
+    listDisplayContainer.style.display = 'none'//如果没有选中的list，那么什么都不显示
+  } else {
+    listDisplayContainer.style.display = 'block' 
+    listTitleElement.innerText = selectedList.name //这是右边的显示细节区域
+    // renderTaskCount(selectedList)
+    clearAll(tasksContainer)//清理：清理数据，否则累加渲染
+    renderTasks(selectedList)
+  }
 }
+
 
 renderAll();
 
+////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
+////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
+
+
+
+//////--------------------- 问题 --------------------/////////////
+
+//Bug：删除之后，名头还在，内容没了
+//

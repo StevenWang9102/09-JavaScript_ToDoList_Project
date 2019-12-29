@@ -70,10 +70,6 @@ function clearElement(element) {
   while (element.hasChildNodes()) {
     element.removeChild(element.firstChild)
   }
-  // while() //当elem下还存在子节点时 循环继续
-  // {
-  //   element.removeChild(element.firstChild);
-  // }
 }
 
 //渲染左侧的内容
@@ -155,6 +151,7 @@ tasksContainer.addEventListener('click', event => {
 clearCompleteTasksButton.addEventListener('click', e => {
   const selectedList = myLists.find(list => list.id === selectedListId)
   selectedList.tasks = selectedList.tasks.filter(task => !task.completeStatus)
+  //@@@@不明白为啥没有重新渲染
   saveAndRender()
 })
 

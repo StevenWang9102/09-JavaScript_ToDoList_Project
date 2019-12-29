@@ -137,20 +137,6 @@ newTaskForm.addEventListener('submit', e => {
   renderAll();
 })
 
-
-
-////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
-////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
-//----------------- 右侧：监听是否选中-----------------//
-tasksContainer.addEventListener("click", e => {
-  if (e.target.tagName.toLowerCase() === "input") {
-    const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
-    ...................ID 哪里来的？？？？？？？？？？？
-
-  }
-
-});
-
 //右侧清单：添加划除-删除事件
 tasksContainer.addEventListener('click', event => {
   console.log(event.target.name);
@@ -164,30 +150,23 @@ tasksContainer.addEventListener('click', event => {
   }
 })
 
-
-
 //----------------- 删除选中 ----------------
-clearCompleteTasksButton.addEventListener('click', function(){
-  
-  const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list
-  //除掉状态是false的
-  const newTaskDetail = []
-  selectedList.tasks.forEach(task =>{
-    console.log(task);
-    if(task.completeStatus === false){
-      newTaskDetail.push(task)
-    }
-  }  )
-  //list重新赋值
-  //渲染
-  renderTasks(newTaskDetail)
-
+clearCompleteTasksButton.addEventListener('click', e => {
+  const selectedList = myLists.find(list => list.id === selectedListId)
+  selectedList.tasks = selectedList.tasks.filter(task => !task.completeStatus)
+  saveToBrower() // saveAndRender()
+  renderAll()
 })
+
+////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
+////////////////////////---------------进行并且梳理到这里：一定要跑起来看功能----------------------//
+
 
 //----------------- 全局渲染 ----------------
 function renderAll() {
   //清除目前的所有内容，以便于重新渲染myList，其实主要是清空浏览器
   clearAll(listsContainer);
+  clearAll(tasksContainer);
 
   //重新渲染左边列表
   const selectedList = myLists.find(list => list.id === selectedListId); //定义选择的list

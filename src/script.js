@@ -117,12 +117,11 @@ function renderAll() {
 }
 
 
-// Right list : delete e右侧清单：添加划除-删除事件
+// Right list : delete input that you click
 tasksContainer.addEventListener('click', event => {  
   if (event.target.tagName.toLowerCase() === 'input') {
     const selectedList = myLists.find(list => list.id === selectedListId)
-
-    const selectedTask = selectedList.tasks.find(task => task.id === event.target.id)//ID哪里来的@@@@@@
+    const selectedTask = selectedList.tasks.find(task => task.id === event.target.id)
     selectedTask.completeStatus = event.target.checked
     saveToBrowser() 
     incompleteTaskCount(selectedList) 
@@ -130,19 +129,17 @@ tasksContainer.addEventListener('click', event => {
 })
 
 
-//清理完成的任务
+// Clean Complete Tasks
 clearCompleteTasksButton.addEventListener('click', e => {
   const selectedList = myLists.find(list => list.id === selectedListId)
   selectedList.tasks = selectedList.tasks.filter(task => !task.completeStatus)
-  //@@@@不明白为啥没有重新渲染
   saveAndRender()
 })
 
-//删除整个list
+// Delete list 
 deleteListButton.addEventListener('click', e => {
   myLists = myLists.filter(list => list.id !== selectedListId)
   selectedListId = null
-  //项目围绕这个selectedListId为核心变化，传递数据 @@@@
   saveAndRender()
 })
 
@@ -154,14 +151,11 @@ function incompleteTaskCount(selectedList) {
 }
 
 
-//右侧列表：添加新的任务，只是添加一行任务
+// Right form add task
 newTaskForm.addEventListener('submit', e => {
-  console.log(e);
-
   e.preventDefault()
   const taskName = newTaskInput.value
   if (taskName !== null && taskName !== ''){
-    console.log('没进来？');
     const myTask = createTask(taskName)
     newTaskInput.value = null
     const selectedList = myLists.find(list => list.id === selectedListId)

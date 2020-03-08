@@ -174,7 +174,6 @@ form {
 .todo-body {
   padding: var(--spacer);
   position: relative;
-  background-color: aquamarine;
 }
 
 .new-task-creator .create {

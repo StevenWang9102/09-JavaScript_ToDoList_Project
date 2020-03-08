@@ -37,7 +37,7 @@ body {
   grid-area: lists;
   border: 5px solid white;
   padding:20px;
-  border-radius: 3%;
+  border-radius: 10px;
 }
 
 .task-list {
@@ -78,12 +78,18 @@ form {
   opacity: 0.7;
 }
 
-.btn-outline-dark
+.todo-list .delete-stuff .btn-outline-dark
 {
   padding: 3px 9px 3px 9px;
+  font-size: 20px;
   background-color: #0e5ae7c2;
   color: white;
-  border: 1px solid white
+  border: 1px solid white;
+  z-index: 10;
+}
+
+.todo-list .delete-stuff .btn-outline-dark :hover{
+  background-color: #b4813ef1;
 }
 
 .new {
@@ -148,8 +154,11 @@ form {
 }
 
 .todo-list {
+  position: relative;
   --spacer: 2rem;
   grid-area: active;
+  margin-left: 10px;
+  border-radius: 10px;
   background: var(--clr-light);
   color: var(--clr-dark);
 }

@@ -2,7 +2,7 @@
     This website mainly can help user to make lists of today's tasks.
 Therefore you can manage your everyday work.
 
-<!-- How it work? -->
+<!-- How it works? -->
  Find the project folder and open index.html file.
 
 <!-- Functions -->

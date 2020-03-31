@@ -3,7 +3,10 @@
 
 <!-- How it works? -->
     Find the project folder and open index.html file.
-    You can also watch project videos on my personal website.(https://stevenwangakl.wixsite.com/myprojects)
+    
+    You can also watch project videos on my personal website.(https://stevenwangakl.wixsite.com/myprojects).
+    
+    You can play with it on my hosted website online (http://todolist-tool.s3-website-ap-southeast-2.amazonaws.com).
 
 <!-- Functions -->
     - you can create a list of tasks.
